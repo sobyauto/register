@@ -1,0 +1,11 @@
+{
+  "owner": {
+    "username": "sobyauto",
+    "email": "sohaibrawi90@gmail.com"
+  },
+  "description": "Official BEDC project site - Iraqi non-commercial informational portal",
+  "domain": "bedc",
+  "records": {
+    "CNAME": "bedc-iq.edgeone.dev"
+  }
+}
