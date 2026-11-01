@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0f2f57">
+<title>حاسبة استهلاك الكهرباء | الشركة العامة لتوزيع كهرباء بغداد</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#d91a1a;--navy:#0f2f57;--border:#e6ecf4;--card:#fff;--green:#16a34a}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-text-size-adjust:100%}
+html,body{font-family:'Cairo',sans-serif;touch-action:manipulation}
+body{background:#f6f8fc;color:var(--navy);line-height:1.7;overscroll-behavior:none}
+.top-fixed{position:fixed;top:0;left:0;right:0;z-index:9999;background:#fff;box-shadow:0 4px 24px rgba(15,47,87,.14);padding-top:env(safe-area-inset-top)}
+.top-line{height:4px;background:var(--red);width:100%}
+header{padding:6px 14px;display:flex;align-items:center;justify-content:space-between}
+.brand{text-align:right;line-height:1.35}
+.brand .rep{font-size:10px;font-weight:700;color:#6b7fa0}
+.brand .ministry{font-size:14px;font-weight:900;color:var(--navy)}
+.brand .service{font-size:10.5px;font-weight:700;color:var(--red);margin-top:2px}
+.logo{width:76px;height:76px;display:flex;align-items:center;justify-content:center;background:transparent!important;border:0.5px solid #e6ecf4;border-radius:50%;overflow:hidden;flex-shrink:0}
+.logo img{width:110%;height:110%;object-fit:contain;background:transparent}
+.spacer{height:79px}
+.hero{background:#fff;padding:24px 14px 20px;text-align:center;border-bottom:4px solid var(--red)}
+.hero-top{display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:6px;background:#eef4ff;border:1px solid #d7e5f8;color:#174a88;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:800}
+.online{display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;padding:5px 10px;border-radius:999px;font-size:10px;font-weight:800}
+.online-dot{width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block}
+.hero h2{font-size:22px;font-weight:900;color:var(--navy)}
+.hero-actions{margin-top:14px;display:flex;gap:8px;justify-content:center}
+.btn{padding:11px 20px;border-radius:12px;font-weight:900;font-size:12px;border:0;cursor:pointer;font-family:'Cairo',sans-serif;touch-action:manipulation}
+.btn-primary{background:linear-gradient(135deg,#071a33 0%,#0d2a52 50%,#143a6e 100%)!important;color:#fff!important}
+.btn-white{background:#fff;border:1.5px solid var(--border);color:var(--navy)}
+.container{padding:12px;max-width:640px;margin:auto}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:12px}
+label{font-size:11px;font-weight:800;color:var(--navy);margin:12px 0 5px;display:block}
+input,select{width:100%;padding:11px;border:1.5px solid var(--border);border-radius:11px;background:#fbfdff;font-size:16px!important;font-weight:700;color:var(--navy);outline:none;font-family:'Cairo',sans-serif}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.switch{display:flex;align-items:center;gap:10px;background:#f5f8fd;border:1px solid var(--border);padding:11px;border-radius:11px;margin-top:12px;font-weight:700;font-size:11.5px}
+.actions{display:flex;gap:8px;margin-top:14px}
+.total-box{background:linear-gradient(135deg,#0f2f57 0%,#173a6b 40%,#1e4f8a 100%);color:#fff;border-radius:20px;padding:16px;text-align:center}
+.total-box strong{font-size:26px;display:block;margin-top:4px;font-weight:900;color:#fff!important}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:11px;padding:9px;text-align:center}
+.stat b{display:block;font-size:11px;color:#fff!important}
+.stat span{font-size:9px;color:#dbe7ff!important}
+.hidden{display:none!important}
+.period-box{background:#f0f6ff;border:1.5px solid #c9dcf5;border-radius:12px;padding:11px;margin-top:11px}
+.error-msg{background:#fee2e2;border:1.5px solid #fecaca;color:#991b1b;padding:10px 12px;border-radius:10px;font-size:11px;font-weight:800;margin-top:12px;display:none}
+.error-msg.show{display:block}
+.shake{animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+input.err{border-color:#ef4444!important;background:#fef2f2!important;box-shadow:0 0 0 3px rgba(239,68,68,.15)!important}
+.tariff-section-title{font-weight:900;font-size:14px;color:var(--navy);text-align:center;margin:10px 0 12px}
+.tariff-cat{border:1.5px solid var(--border);border-radius:18px;background:#fff;margin-bottom:10px;overflow:hidden}
+.tariff-cat-head{padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:#f8fafd;font-weight:900;color:var(--navy);font-size:12.5px}
+.tariff-cat-head:after{content:'▼';font-size:9px;color:#6b7fa0}
+.tariff-cat.open .tariff-cat-head:after{transform:rotate(180deg)}
+.tariff-cat-body{display:none;padding:0 0 10px}
+.tariff-cat.open .tariff-cat-body{display:block}
+.tariff-sub{margin:10px 10px 0;border-radius:12px;overflow:hidden;border:1px solid #e6ecf4}
+.tariff-sub-head{padding:9px 11px;font-weight:900;font-size:11px;display:flex;justify-content:space-between}
+.tariff-sub-head.new{background:#e0f0ff;color:#0f2f57}
+.tariff-sub-head.old{background:#fef3c7;color:#92400e}
+.tariff-row{display:flex;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #f1f4f9;font-size:11.5px;font-weight:700;background:#fff;color:var(--navy)}
+.slabs-container,.chart-box{background:#fff;border:1px solid #e8eef7;border-radius:20px;padding:14px;margin-top:14px}
+.progress-bar{display:flex;height:12px;border-radius:999px;overflow:hidden;margin-bottom:14px;background:#f1f5f9}
+.slab-line{display:flex;justify-content:space-between;padding:9px 0;font-weight:800;font-size:11px;border-bottom:1px dashed #eef2f7}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.chart-title{font-weight:900;color:#15345e;font-size:12px;text-align:center;margin-bottom:12px}
+.chart-wrap{display:flex;align-items:flex-end;gap:6px;height:200px;border-bottom:2px solid #cbd5e1;position:relative;padding-left:34px}
+.y-label{position:absolute;left:0;color:#8a9bb3;font-size:9.5px;font-weight:700}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bar{width:100%;border-radius:9px 9px 2px 2px}
+.bar-label{font-size:8.5px;color:#6b7f9c;font-weight:700;text-align:center}
+footer{text-align:center;color:#7f93ad;padding:20px 12px;font-size:10px;line-height:2;background:#fff;border-top:1px solid var(--border);margin-top:20px}
+footer b{color:var(--navy)}
+@media (prefers-color-scheme: dark){
+body{background:#081326!important;color:#fff!important}
+.top-fixed,header,.hero,footer,.card{background:#101c32!important;border-color:#1e345c!important}
+.brand .rep{color:#8ea3c0!important}
+.brand .ministry,.hero h2,label,.chart-title,footer b,.tariff-section-title{color:#fff!important}
+.brand .service{color:#ff6b6b!important}
+input,select{background:#0a152a!important;border-color:#23406a!important;color:#fff!important}
+.switch,.period-box{background:#0f1e38!important;border-color:#23406a!important}
+.tariff-cat{background:#162447!important;border-color:#2a4068!important}
+.tariff-cat-head{background:#1b2f55!important;color:#fff!important}
+.tariff-cat-head span{color:#fff!important}
+.tariff-cat-body{background:#162447!important}
+.tariff-sub{border-color:#2a4068!important;background:#0f1e38!important}
+.tariff-sub-head.new{background:#12325a!important;color:#8ec1ff!important}
+.tariff-sub-head.old{background:#4a3500!important;color:#fde68a!important}
+.tariff-row{background:#0f1e38!important;color:#fff!important;border-color:#1e345c!important}
+.tariff-row span{color:#fff!important}
+.slabs-container,.chart-box{background:#101c32!important;border-color:#1e345c!important}
+.logo{border-color:#2a4068!important}
+.error-msg{background:#450a0a!important;border-color:#7f1d1d!important;color:#fecaca!important}
+input.err{background:#3f0a0a!important}
+}
+</style>
+</head>
+<body>
+<div class="top-fixed"><div class="top-line"></div><header><div class="brand"><div class="rep">جمهورية العراق</div><div class="ministry">وزارة الكهرباء</div><div class="service">الشركة العامة لتوزيع كهرباء بغداد</div></div><div class="logo"><img src="./logo_web_transparent.png" alt="شعار الشركة العامة لتوزيع كهرباء بغداد"></div></header><div class="top-line"></div></div>
+<div class="spacer"></div>
+<section class="hero"><div class="hero-top"><div class="badge">⚡ خدمة احتساب استهلاك الكهرباء</div><div class="online"><span class="online-dot"></span> اونلاين</div></div><h2>حاسبة استهلاك الكهرباء</h2><div class="hero-actions"><button class="btn btn-primary" onclick="showSection('calc')">🧮 ابدأ الحساب</button><button class="btn btn-white" onclick="showSection('tariff')">‹ التعرفة</button></div></section>
+<div class="container">
+<div id="calcSection" class="hidden">
+<div class="card">
+<label>نوع المشترك</label><select id="category"><option value="res">🏠 الصنف المنزلي</option><option value="com">🏪 الصنف التجاري</option><option value="ind">🏭 الصنف الصناعي</option><option value="agr">🌾 الصنف الزراعي</option><option value="gov">🏛️ الصنف الحكومي</option></select>
+<div class="period-box"><label>📅 فترة الفاتورة</label><select id="tariffPeriod" onchange="onPeriodChange()"><option value="new">✅ التسعيرة الجديدة 2025 - الحالية</option><option value="old">📜 التسعيرة القديمة قبل 2025</option><option value="mixed">🔄 فاتورة متراكمة - قديم + جديد</option></select><div id="oldDateBox" class="hidden" style="margin-top:10px"><div class="grid2"><div><label>بداية</label><input type="date" id="startDate" value="2017-08-14"></div><div><label>نهاية</label><input type="date" id="endDate" value="2026-10-15"></div></div></div></div>
+<div class="grid2"><div><label>السابقة *</label><input id="prev" type="text" inputmode="numeric" placeholder="2514"></div><div><label>الحالية *</label><input id="curr" type="text" inputmode="numeric" placeholder="50199"></div></div>
+<div class="grid2"><div id="daysContainer"><label>الأيام</label><input id="days" type="text" inputmode="numeric" value="30"></div><div><label>الأجور السابقة</label><input id="monthly" type="text" inputmode="numeric" value="0"></div></div>
+<div class="grid2"><div><label>معامل الضرب</label><select id="mult" onchange="toggleCustom()"><option value="1">× 1</option><option value="2">× 2</option><option value="10">× 10</option><option value="30">× 30</option><option value="custom">يدوي</option></select></div><div><label>اليدوي</label><input id="customMult" type="text" inputmode="numeric" disabled></div></div>
+<label>الضغط</label><select id="voltage"><option value="low">الواطئ</option><option value="11">11 ك.ف</option><option value="33">33 ك.ف</option></select>
+<div class="switch"><input id="transformer" type="checkbox"><span>بدل المحولة 2.5%</span></div><label>الأجور الثابتة</label><input id="fixed" type="text" inputmode="numeric" value="3000">
+<div id="errorMsg" class="error-msg"></div>
+<div class="actions"><button class="btn btn-primary" onclick="calculate()" style="flex:1">احسب</button><button class="btn btn-white" onclick="location.reload()">إعادة</button></div>
+<div id="resultBox" class="hidden"><div class="total-box" style="margin-top:12px"><small style="font-size:10px">الإجمالي</small><strong id="total">0 د.ع</strong><div class="results-grid"><div class="stat"><b id="cons">0</b><span>الاستهلاك</span></div><div class="stat"><b id="energy">0</b><span>الطاقة</span></div><div class="stat"><b id="transCost">0</b><span>المحولة</span></div><div class="stat"><b id="monthlyOut">0</b><span>شهرية</span></div><div class="stat"><b id="fixedOut">0</b><span>ثابت</span></div></div></div><div id="slabsVizContainer"></div></div>
+</div>
+</div>
+<div id="tariffSection">
+<div class="tariff-section-title">قائمة الأصناف والتعرفة الرسمية - وزارة الكهرباء</div>
+<div class="tariff-cat" onclick="this.classList.toggle('open')"><div class="tariff-cat-head"><span>🏠 الصنف المنزلي</span><span>▼</span></div><div class="tariff-cat-body"><div class="tariff-sub"><div class="tariff-sub-head new">✅ جديدة 2025</div><div class="tariff-row"><span>1-1500</span><span>10 د.ع</span></div><div class="tariff-row"><span>1501-3000</span><span>35 د.ع</span></div><div class="tariff-row"><span>3001-4000</span><span>80 د.ع</span></div><div class="tariff-row"><span>4001+</span><span>120 د.ع</span></div></div><div class="tariff-sub"><div class="tariff-sub-head old">📜 قديمة قبل 2025</div><div class="tariff-row"><span>1-500</span><span>30 د.ع</span></div><div class="tariff-row"><span>501-1000</span><span>50 د.ع</span></div><div class="tariff-row"><span>1001-1500</span><span>90 د.ع</span></div><div class="tariff-row"><span>1501-2000</span><span>140 د.ع</span></div><div class="tariff-row"><span>2001-3000</span><span>170 د.ع</span></div><div class="tariff-row"><span>3001-4000</span><span>200 د.ع</span></div><div class="tariff-row"><span>4001+</span><span>225 د.ع</span></div></div></div></div>
+<div class="tariff-cat" onclick="this.classList.toggle('open')"><div class="tariff-cat-head"><span>🏪 الصنف التجاري</span><span>▼</span></div><div class="tariff-cat-body"><div class="tariff-sub"><div class="tariff-sub-head new">✅ جديدة</div><div class="tariff-row"><span>1-1000</span><span>60</span></div><div class="tariff-row"><span>1001-2000</span><span>80</span></div><div class="tariff-row"><span>2001+</span><span>130</span></div></div><div class="tariff-sub"><div class="tariff-sub-head old">📜 قديمة</div><div class="tariff-row"><span>1-1000</span><span>155</span></div><div class="tariff-row"><span>1001-2000</span><span>175</span></div><div class="tariff-row"><span>2001-3000</span><span>200</span></div><div class="tariff-row"><span>3001-4000</span><span>250</span></div><div class="tariff-row"><span>4001+</span><span>300</span></div></div></div></div>
+<div class="tariff-cat" onclick="this.classList.toggle('open')"><div class="tariff-cat-head"><span>🏭 الصنف الصناعي</span><span>▼</span></div><div class="tariff-cat-body"><div class="tariff-sub"><div class="tariff-sub-head new">✅ جديدة</div><div class="tariff-row"><span>الكل</span><span>60</span></div></div><div class="tariff-sub"><div class="tariff-sub-head old">📜 قديمة</div><div class="tariff-row"><span>الكل</span><span>160</span></div></div></div></div>
+<div class="tariff-cat" onclick="this.classList.toggle('open')"><div class="tariff-cat-head"><span>🌾 الصنف الزراعي</span><span>▼</span></div><div class="tariff-cat-body"><div class="tariff-sub"><div class="tariff-sub-head new">✅ جديدة</div><div class="tariff-row"><span>الكل</span><span>40</span></div></div><div class="tariff-sub"><div class="tariff-sub-head old">📜 قديمة</div><div class="tariff-row"><span>الكل</span><span>100</span></div></div></div></div>
+<div class="tariff-cat" onclick="this.classList.toggle('open')"><div class="tariff-cat-head"><span>🏛️ الصنف الحكومي</span><span>▼</span></div><div class="tariff-cat-body"><div class="tariff-sub"><div class="tariff-sub-head new">✅ جديدة</div><div class="tariff-row"><span>الكل</span><span>120</span></div></div><div class="tariff-sub"><div class="tariff-sub-head old">📜 قديمة</div><div class="tariff-row"><span>1-5000</span><span>150</span></div><div class="tariff-row"><span>5001-10000</span><span>175</span></div><div class="tariff-row"><span>10001-20000</span><span>200</span></div><div class="tariff-row"><span>20001-40000</span><span>225</span></div><div class="tariff-row"><span>40001+</span><span>250</span></div></div></div></div>
+</div>
+</div>
+<footer>برمجة وتصميم: <b>المهندس صهيب عبدالكريم راكع</b><br>الشركة العامة لتوزيع كهرباء بغداد - وزارة الكهرباء العراقية<br><span class="ver">الإصدار 6.0 - 2026<br>جميع الحقوق محفوظة © وزارة الكهرباء العراقية</span></footer>
+<script>
+document.addEventListener('touchmove',function(e){if(e.scale&&e.scale!==1)e.preventDefault()},{passive:false});
+document.addEventListener('gesturestart',function(e){e.preventDefault()});
+let lastTouch=0;document.addEventListener('touchend',function(e){let now=Date.now();if(now-lastTouch<=300)e.preventDefault();lastTouch=now},{passive:false});
+const CUTOFF=new Date('2025-01-01T00:00:00');
+const colorsNew=['#1e6f5e','#7aae94','#d9956f','#9a5f4f'];
+const colorsOld=['#1e6f5e','#2e7d6b','#4a9a85','#7aae94','#b68a6a','#d9956f','#9a5f4f'];
+const tariffsNew={res:{slabs:[{c:1500,p:10,n:'الأولى'},{c:1500,p:35,n:'الثانية'},{c:1000,p:80,n:'الثالثة'},{c:Infinity,p:120,n:'الرابعة'}]},com:{slabs:[{c:1000,p:60},{c:1000,p:80},{c:Infinity,p:130}]},ind:{slabs:[{c:Infinity,p:60}]},agr:{slabs:[{c:Infinity,p:40}]},gov:{slabs:[{c:Infinity,p:120}]}};
+const tariffsOld={res:{slabs:[{c:500,p:30,n:'الأولى'},{c:500,p:50,n:'الثانية'},{c:500,p:90,n:'الثالثة'},{c:500,p:140,n:'الرابعة'},{c:1000,p:170,n:'الخامسة'},{c:1000,p:200,n:'السادسة'},{c:Infinity,p:225,n:'السابعة'}]},com:{slabs:[{c:1000,p:155},{c:1000,p:175},{c:1000,p:200},{c:1000,p:250},{c:Infinity,p:300}]},ind:{slabs:[{c:Infinity,p:160}]},agr:{slabs:[{c:Infinity,p:100}]},gov:{slabs:[{c:5000,p:150},{c:5000,p:175},{c:10000,p:200},{c:20000,p:225},{c:Infinity,p:250}]}};
+function toNum(s){if(!s&&s!==0)return 0;let str=s.toString();const ar='٠١٢٣٤٥٦٧٨٩';const en='0123456789';for(let i=0;i<10;i++){str=str.split(ar[i]).join(en[i]);}str=str.replace(/[^0-9.]/g,'');return Number(str)||0;}
+function showSection(s){document.getElementById('calcSection').classList.toggle('hidden',s!=='calc');document.getElementById('tariffSection').classList.toggle('hidden',s!=='tariff');}
+function toggleCustom(){document.getElementById('customMult').disabled=document.getElementById('mult').value!=='custom'}
+function money(n){return Math.round(n).toLocaleString('ar-IQ')+' د.ع'}
+function calcCost(cons,tariff){let cost=0,rem=cons;for(let slab of tariff.slabs){let q=Math.min(rem,slab.c);cost+=q*slab.p;rem-=q;if(rem<=0)break}return cost;}
+function onPeriodChange(){
+  let p=document.getElementById('tariffPeriod').value;
+  let box=document.getElementById('oldDateBox');
+  let sd=document.getElementById('startDate');
+  let ed=document.getElementById('endDate');
+  box.classList.toggle('hidden',p==='new');
+  document.getElementById('daysContainer').classList.toggle('hidden',p!=='new');
+  if(p==='old'){
+    sd.min='2017-01-01';sd.max='2024-12-31';ed.min='2017-01-02';ed.max='2024-12-31';
+    if(!sd.value || new Date(sd.value)>=CUTOFF) sd.value='2024-01-01';
+    if(!ed.value || new Date(ed.value)>=CUTOFF) ed.value='2024-12-15';
+  }else if(p==='new'){
+    sd.min='2025-01-01';sd.max='';ed.min='2025-01-02';ed.max='';
+    if(!sd.value || new Date(sd.value)<CUTOFF) sd.value='2025-01-01';
+    if(!ed.value || new Date(ed.value)<CUTOFF) ed.value=new Date().toISOString().split('T')[0];
+  }else{
+    sd.min='2017-01-01';sd.max='';sd.value='2017-08-14';
+    ed.min='2017-01-02';ed.max='';ed.value='2026-10-15';
+  }
+}
+function enforceOldDateLock(){
+  let p=document.getElementById('tariffPeriod').value;
+  if(p!=='old') return;
+  let sd=document.getElementById('startDate');
+  let ed=document.getElementById('endDate');
+  let maxOld='2024-12-31';
+  if(sd.value && sd.value > maxOld) sd.value = maxOld;
+  if(ed.value && ed.value > maxOld) ed.value = maxOld;
+}
+function buildSlabsHTML(totalKwh, tariff, colors, title){let slabData=[];let rem=totalKwh;for(let i=0;i<tariff.slabs.length;i++){let slab=tariff.slabs[i];let q=Math.min(rem,slab.c);if(q<=0)break;slabData.push({name:slab.n||('شريحة '+(i+1)),kwh:q,cost:q*slab.p,color:colors[i%colors.length]});rem-=q;}if(slabData.length===0)return'';let maxK=Math.max(...slabData.map(x=>x.kwh),1);let progress='';slabData.forEach(s=>{let perc=(s.kwh/totalKwh)*100;progress+=`<div style="width:${perc}%;background:${s.color}"></div>`;});let list='';slabData.forEach(s=>{list+=`<div class="slab-line"><div class="right"><span class="dot" style="background:${s.color}"></span> ${s.name}</div><div class="left">${Math.round(s.kwh).toLocaleString('en-US')} kWh — ${Math.round(s.cost).toLocaleString('en-US')} د.ع</div></div>`;});let chartBars=`<span class="y-label" style="top:0">${Math.round(maxK)}</span><span class="y-label" style="top:50%">${Math.round(maxK*0.5)}</span><span class="y-label" style="bottom:20px">0</span>`;slabData.forEach(s=>{let h=(s.kwh/maxK)*170;if(h<8)h=8;chartBars+=`<div class="bar-col"><div class="bar" style="height:${h}px;background:${s.color}"></div><div class="bar-label">${s.name.replace('الشريحة ','')}</div></div>`;});return `<div class="slabs-container"><div style="font-weight:900;color:#0f2f57;margin-bottom:10px;font-size:12px">${title}</div><div class="progress-bar">${progress}</div>${list}</div><div class="chart-box"><div class="chart-title">📊 ${title}</div><div class="chart-wrap">${chartBars}</div></div>`;}
+function calculate(){
+  let errBox=document.getElementById('errorMsg');errBox.classList.remove('show');
+  const prevEl=document.getElementById('prev');const currEl=document.getElementById('curr');
+  prevEl.classList.remove('err','shake');currEl.classList.remove('err','shake');
+  enforceOldDateLock();
+  let cat=category.value,period=document.getElementById('tariffPeriod').value;
+  let sdVal=document.getElementById('startDate').value,edVal=document.getElementById('endDate').value;
+  let sd=sdVal?new Date(sdVal):null,ed=edVal?new Date(edVal):null;
+  let dys=toNum(days.value)||30;if(sd&&ed)dys=Math.max(1,Math.ceil((ed-sd)/86400000)+1);
+  let pr=toNum(prev.value),cr=toNum(curr.value);
+  let hasError=false;
+  if(!prev.value){prevEl.classList.add('err','shake');hasError=true;}
+  if(!curr.value||cr===0){currEl.classList.add('err','shake');hasError=true;}
+  if(hasError){errBox.textContent='⚠️ رجاءً املأ حقل القراءة السابقة والحالية';errBox.classList.add('show');setTimeout(()=>{prevEl.classList.remove('shake');currEl.classList.remove('shake');},350);return;}
+  if(cr<=pr){errBox.textContent='⚠️ القراءة الحالية يجب ان تكون اكبر من السابقة';errBox.classList.add('show');currEl.classList.add('err');return;}
+  let cons=cr-pr;let multVal=mult.value==='custom'?(toNum(customMult.value)||1):(toNum(mult.value)||1);
+  let totalWithMult=cons*multVal;if(totalWithMult<=0){errBox.textContent='⚠️ الاستهلاك صفر';errBox.classList.add('show');return;}
+  let cost=0;let tariffNew=tariffsNew[cat],tariffOld=tariffsOld[cat];
+  let eq=(totalWithMult/dys)*30;let costEqNew=calcCost(eq,tariffNew);let costEqOld=calcCost(eq,tariffOld);
+  if(period==='old')cost=(costEqOld/30)*dys;else if(period==='new')cost=(costEqNew/30)*dys;
+  else{let dOld=Math.ceil((CUTOFF-sd)/86400000);let dNew=dys-dOld;if(dNew<0){dNew=0;dOld=dys;}let cOld=totalWithMult*(dOld/dys),cNew=totalWithMult*(dNew/dys);let eqOld=(cOld/dOld)*30,eqNew=dNew?(cNew/dNew)*30:0;let co=(calcCost(eqOld,tariffOld)/30)*dOld;let cn=dNew?(calcCost(eqNew,tariffNew)/30)*dNew:0;cost=co+cn;}
+  let fixedCalc=toNum(fixed.value)||0;let transCost=transformer.checked?cost*0.025:0;let monthlyCalc=toNum(monthly.value)||0;
+  let total=cost+transCost+monthlyCalc+fixedCalc;
+  resultBox.classList.remove('hidden');totalEl.textContent=money(total);consEl.textContent=Math.floor(totalWithMult).toLocaleString('ar-IQ');energyEl.textContent=money(cost);transCostEl.textContent=money(transCost);monthlyOut.textContent=money(monthlyCalc);fixedOut.textContent=money(fixedCalc);
+  let container=document.getElementById('slabsVizContainer');container.innerHTML='';
+  if(period==='new'){container.innerHTML=buildSlabsHTML(totalWithMult,tariffNew,colorsNew,'✅ جديدة 2025');}
+  else if(period==='old'){container.innerHTML=buildSlabsHTML(totalWithMult,tariffOld,colorsOld,'📜 قديمة');}
+  else{let dOld=Math.ceil((CUTOFF-sd)/86400000);let dNew=dys-dOld;if(dNew<0){dNew=0;dOld=dys;}let cOld=totalWithMult*(dOld/dys),cNew=totalWithMult*(dNew/dys);container.innerHTML=buildSlabsHTML(cOld,tariffOld,colorsOld,'📜 جزء قديم '+dOld+' يوم')+buildSlabsHTML(cNew,tariffNew,colorsNew,'✅ جزء جديد '+dNew+' يوم');}
+  resultBox.scrollIntoView({behavior:'smooth'});
+}
+const category=document.getElementById('category'),prev=document.getElementById('prev'),curr=document.getElementById('curr'),mult=document.getElementById('mult'),customMult=document.getElementById('customMult'),monthly=document.getElementById('monthly'),fixed=document.getElementById('fixed'),transformer=document.getElementById('transformer');
+const totalEl=document.getElementById('total'),consEl=document.getElementById('cons'),energyEl=document.getElementById('energy'),transCostEl=document.getElementById('transCost'),monthlyOut=document.getElementById('monthlyOut'),fixedOut=document.getElementById('fixedOut'),resultBox=document.getElementById('resultBox');
+['prev','curr'].forEach(id=>{document.getElementById(id).addEventListener('input',()=>{document.getElementById(id).classList.remove('err','shake');if(document.getElementById('prev').value&&document.getElementById('curr').value){document.getElementById('errorMsg').classList.remove('show');}});});
+document.getElementById('startDate').addEventListener('change', enforceOldDateLock);
+document.getElementById('endDate').addEventListener('change', enforceOldDateLock);
+document.getElementById('startDate').addEventListener('input', enforceOldDateLock);
+document.getElementById('endDate').addEventListener('input', enforceOldDateLock);
+onPeriodChange();
+</script>
+</body>
+</html>
